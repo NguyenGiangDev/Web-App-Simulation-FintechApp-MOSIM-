@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  api-gateway:
+    image: <ECR_URL>/api-gateway:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - auth-service
+      - charge-service
+      - transaction-service
+      - history-service
+    env_file:
+      - .env.docker
+
+  auth-service:
+    image: <ECR_URL>/auth-service:latest
+    ports:
+      - "3001:3001"
+    env_file:
+      - .env.docker
+
+  charge-service:
+    image: <ECR_URL>/charge-service:latest
+    ports:
+      - "3002:3002"
+    env_file:
+      - .env.docker
+
+  transaction-service:
+    image: <ECR_URL>/transaction-service:latest
+    ports:
+      - "3004:3004"
+    env_file:
+      - .env.docker
+
+  history-service:
+    image: <ECR_URL>/history-service:latest
+    ports:
+      - "3003:3003"
+    env_file:
+      - .env.docker
+
+networks:
+  default:
+    driver: bridge

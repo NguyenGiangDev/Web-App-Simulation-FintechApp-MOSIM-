@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOSIM - Tài khoản của bạn</title>
+  <link rel="stylesheet" href="dashboard.css">
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header class="main-header">
+    <div class="brand">
+      <img src="https://img.icons8.com/color/48/000000/wallet--v2.png" alt="MOSIM Logo" class="logo"/>
+      <span class ="brand-name">MOSIM</span>
+    </div>
+    <div class="user-info-header">
+      <div class="user-row">
+        <span class="label">Xin chào,</span>
+        <span class="value" id="fullname">Nguyễn Văn A</span>
+      </div>
+      <div class="user-row">
+        <span class="label">Số điện thoại:</span>
+        <span class="value" id="phone_number">0987654321</span>
+      </div>
+      <div class="user-row">
+        <span class="label">Số dư:</span>
+        <span class="value balance" id="balance">1,000,000 VNĐ</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+  <div class="action-buttons">
+    <button class="action-btn overlay-btn" id="openDeposit">
+      <span class="icon">💸</span>
+      <span>Nạp tiền</span>
+    </button>
+
+    <button class="action-btn overlay-btn" id="shopBtn">
+      <span class="icon">🛒</span>
+      <span>Mua sắm</span>
+    </button>
+
+    <button class="action-btn overlay-btn" id="transferBtn">
+      <span class="icon">🔁</span>
+      <span>Chuyển tiền</span>
+    </button>
+
+    <button class="action-btn overlay-btn" id="historyBtn">
+      <span class="icon">📜</span>
+      <span>Lịch sử giao dịch</span>
+    </button>
+
+    <!-- Nút mở popup biểu đồ -->
+      <button class="action-btn overlay-btn" id="openAnalysisBtn">
+                <span class="icon">📊</span>
+                <span>Phân tích Thu-Chi</span>
+            </button>
+  </div>
+</main>
+  <!-- Popup Nạp tiền -->
+<div class="modal" id="depositModal">
+  <div class="deposit-modal-content">
+    <span class="close-btn" id="closeDepositModal">&times;</span>
+    <h2>Nạp tiền vào ví</h2>
+    
+    <p class="modal-subtitle">Chọn nguồn tiền từ các ngân hàng liên kết</p>
+    
+    <div class="bank-selection-grid">
+      <button class="bank-option" data-bank="BIDV">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Logo_BIDV.svg" alt="Logo BIDV">
+        <span class="bank-name">BIDV</span>
+      </button>
+      <button class="bank-option" data-bank="Vietcombank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/Vietcombank_logo_fixed.svg" alt="Logo Vietcombank">
+        <span class="bank-name">Vietcombank</span>
+      </button>
+      <button class="bank-option" data-bank="Agribank">
+        <img src="https://upload.wikimedia.org/wikipedia/vi/3/3d/Argibank_logo.svg" alt="Logo Agribank">
+        <span class="bank-name">Agribank</span>
+      </button>
+      <button class="bank-option" data-bank="Techcombank">
+        <img src="https://upload.wikimedia.org/wikipedia/vi/4/42/Techcombank%27s_logo.png" alt="Logo Techcombank">
+        <span class="bank-name">Techcombank</span>
+      </button>
+       <button class="bank-option" data-bank="MBBank">
+        <img src="https://api.vietqr.io/img/MB.png" alt="Logo MB Bank">
+        <span class="bank-name">MB Bank</span>
+      </button>
+       <button class="bank-option" data-bank="Vietinbank">
+        <img src="https://upload.wikimedia.org/wikipedia/vi/9/9d/Logo_Vietinbank.png" alt="Logo Vietinbank">
+        <span class="bank-name">Vietinbank</span>
+      </button>
+    </div>
+    
+    <div class="amount-section">
+      <label for="amountInput">Nhập số tiền cần nạp</label>
+      <div class="input-wrapper">
+        <input type="number" id="amountInput" placeholder="VD: 500,000" min="1000">
+        <span class="currency-unit">VNĐ</span>
+      </div>
+    </div>
+    
+    <button id="confirmDeposit" class="confirm-btn">Xác nhận Nạp tiền</button>
+  </div>
+</div>
+<!-- Popup Chuyển tiền -->
+<div class="modal" id="transferModal">
+  <div class="modal-content transfer-modal-content">
+    <span class="close-btn" id="closeTransferModal">&times;</span>
+    <h2>Chuyển tiền</h2>
+    <label for="transferPhone" class="modal-label">Số điện thoại người nhận:</label>
+    <input type="text" id="transferPhone" class="modal-input" placeholder="Nhập số điện thoại người nhận">
+    <button id="confirmUser" class="confirmUser-btn">Xác nhận người dùng</button>
+    <label for="transferMoney" class="modal-label">Số tiền cần chuyển (VNĐ):</label>
+    <input type="number" id="transferMoney" class="modal-input" placeholder="Nhập số tiền cần chuyển" min="1000">
+    <button id="confirmTransfer" class="confirm-btn">Xác nhận chuyển tiền</button>
+  </div>
+</div>
+
+<!-- Popup Lịch sử giao dịch -->
+<div class="modal" id="historyModal">
+  <div class="modal-content history-modal-content">
+    <span class="close-btn" id="closeHistoryModal">&times;</span>
+    <h2>Lịch sử giao dịch</h2>
+    <div id="historyList" class="history-list">
+      <div class="loading-history">Đang tải...</div>
+    </div>
+    <button id="openAnalysisBtn" class="analysis-btn">Xem phân tích</button>
+  </div>
+</div>
+
+
+<!--Popup Các mục mua sắm-->
+<div class="modal" id="shopModal">
+  <div class="modal-content shop-modal-content">
+    <span class="close-btn" id="closeShopModal">&times;</span>
+    <h2>Các mục mua sắm</h2>
+    <div class="shop-list">
+      <button class="shop-item" id="buyMovieTicket">
+        <span class="shop-icon">🎬</span>
+        <span>Mua vé xem phim</span>
+      </button>
+      <button class="shop-item" id="buyGoods">
+        <span class="shop-icon">🛍️</span>
+        <span>Mua sắm đồ dùng</span>
+      </button>
+      <button class="shop-item" id="buyTravelTicket">
+        <span class="shop-icon">✈️</span>
+        <span>Đặt vé du lịch</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+  <div class="modal" id="analysisModal">
+        <div class="modal-content analysis-modal-content">
+            <span class="close-btn" id="closeAnalysisModal">&times;</span>
+            <h2>Phân tích Thu - Chi</h2>
+            <div id="chartContainer" class="chart-container"></div>
+        </div>
+    </div>
+  <footer>
+    © 2025 <b>MOSIM</b>. All rights reserved.
+  </footer>
+
+<script>
+  // Lấy name và phone_number từ query string URL
+  const params = new URLSearchParams(window.location.search);
+  const username = params.get('name') || 'Không xác định';
+  const phone_number = params.get('phone') || 'Không xác định';
+  const balance = params.get('balance') || '0 VND';
+
+  // Gán dữ liệu thực vào giao diện
+  document.getElementById('fullname').innerText = username;
+  document.getElementById('phone_number').innerText = phone_number;
+  document.getElementById('balance').innerText = balance;
+
+  // Nút và Modal Nạp tiền
+  const openDepositBtn = document.getElementById('openDeposit');
+  const depositModal = document.getElementById('depositModal');
+  const closeDepositModal = document.getElementById('closeDepositModal');
+  const confirmDepositBtn = document.getElementById('confirmDeposit');
+  const bankOptions = document.querySelectorAll('.bank-option');
+  // Nút và Modal Chuyển tiền
+  const openTransferBtn = document.getElementById('transferBtn');
+  const transferModal = document.getElementById('transferModal');
+  const closeTransferModal = document.getElementById('closeTransferModal');
+  const confirmTransferBtn = document.getElementById('confirmTransfer');
+  const confirmUserBtn = document.getElementById('confirmUser');
+ 
+  // Nút và Modal Lịch sử nạp tiền
+  const openhistoryBtn = document.getElementById('historyBtn');
+  const historyModal = document.getElementById('historyModal');
+  const closeHistoryModal = document.getElementById('closeHistoryModal');
+  // Nút và Modal biểu đồ
+  const openAnalysisBtn = document.getElementById('openAnalysisBtn');
+  const analysisModal = document.getElementById('analysisModal');
+  const closeAnalysisModal = document.getElementById('closeAnalysisModal');
+
+    // Biến toàn cục để lưu trữ dữ liệu, tránh gọi API nhiều lần
+    let transactionData = []; 
+    let totalDoanhThu = 0;
+    let totalChi = 0;
+  // Lấy số dư khi load trang
+  window.addEventListener('DOMContentLoaded', () => {
+    if (username && phone_number) {
+      fetch('/api/get-balance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, phone_number })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (typeof data.balance === 'number') {
+          document.getElementById('balance').textContent = `${data.balance.toLocaleString('vi-VN')} VNĐ`;
+        } else if (data.balance && typeof data.balance.total_amount === 'number') {
+          document.getElementById('balance').textContent = `${data.balance.total_amount.toLocaleString('vi-VN')} VNĐ`;
+        } else {
+          document.getElementById('balance').textContent = '0 VND';
+        }
+      })
+      .catch(err => {
+        console.error('Lỗi khi lấy số dư:', err);
+        document.getElementById('balance').textContent = 'Lỗi tải số dư';
+      });
+    }
+  });
+
+  // Xử lý mở modal Nạp tiền
+  openDepositBtn.addEventListener('click', () => {
+    depositModal.style.display = 'flex';
+  });
+
+  // Đóng modal Nạp tiền khi click nút đóng hoặc click ra ngoài
+  closeDepositModal.addEventListener('click', () => {
+    depositModal.style.display = 'none';
+  });
+  depositModal.addEventListener('click', (e) => {
+    if (e.target === depositModal) {
+      depositModal.style.display = 'none';
+    }
+  });
+
+
+const historyList = document.getElementById('historyList');
+
+// Mở popup lịch sử và fetch dữ liệu tổng hợp
+openhistoryBtn.addEventListener('click', async () => {
+  historyModal.style.display = 'flex';
+  await fetchCombinedHistory();
+  renderHistoryList();
+});
+// Đóng popup
+closeHistoryModal.addEventListener('click', () => {
+  historyModal.style.display = 'none';
+});
+historyModal.addEventListener('click', (e) => {
+  if (e.target === historyModal) {
+    historyModal.style.display = 'none';
+  }
+});
+openAnalysisBtn.addEventListener('click', async () => {
+  analysisModal.style.display = 'flex';
+  await fetchCombinedHistory();
+  renderCharts();
+});
+
+  
+  closeAnalysisModal.addEventListener('click', () => {
+    analysisModal.style.display = 'none';
+  analysisModal.addEventListener('click', (e) => {
+    if (e.target === analysisModal) {
+      analysisModal.style.display = 'none';
+    }
+  })
+  });
+
+  async function fetchCombinedHistory() {
+        try {
+            const response = await fetch('/api/get-combined-history', {
+                method: 'POST',
+                headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify({ username, phone_number })
+            });
+            if (!response.ok) throw new Error('Lỗi mạng');
+            
+            transactionData = await response.json();
+            
+            // Tính toán lại tổng thu chi mỗi khi lấy dữ liệu mới
+            totalDoanhThu = 0;
+            totalChi = 0;
+            transactionData.forEach(item => {
+                const amount = Number(item.amount) || 0;
+                if (item.type === 'Nạp tiền' || item.type === 'Nhận tiền') {
+                    totalDoanhThu += amount;
+                } else {
+                    totalChi += amount;
+                }
+            });
+        } catch (error) {
+            console.error("Lỗi khi fetch lịch sử:", error);
+            transactionData = []; // Đảm bảo mảng rỗng nếu có lỗi
+        }
+    }
+
+    // --- LOGIC HIỂN THỊ LỊCH SỬ ---
+    function renderHistoryList() {
+        const historyList = document.getElementById('historyList');
+        historyList.innerHTML = ''; // Xóa nội dung cũ
+        if (transactionData.length === 0) {
+            historyList.innerHTML = '<div class="no-history">Chưa có lịch sử giao dịch.</div>';
+            return;
+        }
+
+        historyList.innerHTML = transactionData.map(item => {
+            const amount = Number(item.amount) || 0;
+            const isPositive = item.type === 'Nạp tiền' || item.type === 'Nhận tiền';
+            return `
+                <div class="history-item">
+                    <div class="history-details">
+                        <span class="description">${item.description}</span>
+                        <span class="time">${new Date(item.transaction_time).toLocaleString('vi-VN')}</span>
+                    </div>
+                    <div class="history-amount">
+                        <span class="${isPositive ? 'amount-positive' : 'amount-negative'}">
+                            ${isPositive ? '+' : '-'}${amount.toLocaleString('vi-VN')} VNĐ
+                        </span>
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    // --- LOGIC HIỂN THỊ BIỂU ĐỒ ---
+    let analysisChartInstance = null;
+    function renderCharts() { // Không cần tham số đầu vào nữa
+        const chartContainer = document.getElementById('chartContainer');
+        if (transactionData.length === 0) {
+            chartContainer.innerHTML = '<div class="no-history">Chưa có dữ liệu để phân tích.</div>';
+            return;
+        } 
+
+        chartContainer.innerHTML = `
+            <div class="chart-controls">
+                <select id="chartType"><option value="pie">Biểu đồ tròn</option><option value="bar">Biểu đồ cột</option></select>
+            </div>
+            <canvas id="analysisChartCanvas"></canvas>`;
+            
+        const chartData = {
+            labels: ['Thu nhập', 'Chi tiêu'],
+            datasets: [{
+                label: 'Số tiền (VNĐ)',
+                data: [totalDoanhThu, totalChi], // Sử dụng biến toàn cục đã tính
+                backgroundColor: ['#28a745', '#dc3545']
+            }]
+        };
+        const ctx = document.getElementById('analysisChartCanvas').getContext('2d');
+
+        function drawChart(type) {
+            if (analysisChartInstance) analysisChartInstance.destroy();
+            analysisChartInstance = new Chart(ctx, { type, data: chartData, options: { responsive: true } });
+        }
+        drawChart('pie');
+        document.getElementById('chartType').addEventListener('change', (e) => drawChart(e.target.value));
+    }
+    
+
+
+
+
+
+
+  // Lấy thời gian hiện tại theo giờ Việt Nam (UTC+7)
+function getVietnamTimeISO() {
+  const now = new Date();
+  // Lấy timestamp UTC rồi cộng thêm 7 tiếng (7*60*60*1000 ms)
+  const vietnamTime = new Date(now.getTime() + 7 * 60 * 60 * 1000);
+  return vietnamTime.toISOString().slice(0, 19).replace('T', ' ');
+}
+
+// Xử lý khi người dùng chọn một ngân hàng
+let selectedBank = null;
+bankOptions.forEach(button => {
+  button.addEventListener('click', () => {
+    // 1. Bỏ trạng thái 'selected' của tất cả các nút
+    bankOptions.forEach(btn => btn.classList.remove('selected'));
+    // 2. Thêm trạng thái 'selected' cho nút vừa được click
+    button.classList.add('selected');
+    // 3. Lưu lại giá trị ngân hàng đã chọn
+    selectedBank = button.dataset.bank;
+  });
+});
+ // Xử lý xác nhận nạp tiền
+confirmDepositBtn.addEventListener('click', () => {
+  const amount = amountInput.value;
+
+  // Kiểm tra dữ liệu đầu vào
+  if (!selectedBank) {
+    alert('Vui lòng chọn một ngân hàng.');
+    return;
+  }
+  if (!amount || amount < 1000) {
+    alert('Vui lòng nhập số tiền hợp lệ (tối thiểu 1,000 VNĐ).');
+    return;
+  }
+
+  // Lấy thời gian hiện tại
+  const transaction_time = getVietnamTimeISO(); 
+
+  // Gọi API để thực hiện nạp tiền và ghi lịch sử 
+  fetch('/api/deposit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      username: username,
+      phone_number: phone_number,
+      amount: amount,
+      bank: selectedBank,
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert('Cập nhật số dư thành công', data.balance);
+
+    if (typeof data.balance === 'number') {
+      document.getElementById('balance').textContent = `${data.balance.toLocaleString('vi-VN')} VNĐ`;
+    }
+    else if (typeof data.balance === 'object' && data.balance !== null && 'total_amount' in data.balance) {
+      const newBalance = data.balance.total_amount;
+      document.getElementById('balance').textContent = `${newBalance.toLocaleString('vi-VN')} VNĐ`;
+    }
+    else if (typeof data.balance === 'object' && data.balance !== null && 'amount' in data.balance) {
+      const newBalance = data.balance.amount;
+      document.getElementById('balance').textContent = `${newBalance.toLocaleString('vi-VN')} VNĐ`;
+    }
+    else if (typeof data.balance === 'string') {
+      document.getElementById('balance').textContent = data.balance;
+    }
+    else {
+      document.getElementById('balance').textContent = 'Không xác định';
+    }
+    depositModal.style.display = 'none';
+
+    // Gửi thêm lịch sử nạp tiền sau khi nạp thành công
+    fetch('/api/add-history', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      username: username,
+      phone_number: phone_number,
+      amount: amount,
+      bank: selectedBank,
+      transaction_time: transaction_time
+    })
+  })
+  })
+  .catch(error => {
+    console.error('Lỗi khi nạp tiền:', error);
+    alert('Có lỗi xảy ra khi nạp tiền.');
+    depositModal.style.display = 'none';
+  });
+});
+
+  // Xử lý mở modal Chuyển tiền
+  openTransferBtn.addEventListener('click', () => {
+    transferModal.style.display = 'flex';
+  });
+
+// Đóng modal Chuyển tiền khi click nút đóng hoặc click ra ngoài
+closeTransferModal.addEventListener('click', () =>  {
+  transferModal.style.display = 'none';
+});
+
+  // ...các biến đã khai báo ở trên...
+
+const transferPhoneInput = document.getElementById('transferPhone');
+
+// Thêm dòng này vào HTML dưới input số điện thoại người nhận:
+let receiverNameLabel = document.createElement('div');
+receiverNameLabel.id = 'receiverNameLabel';
+receiverNameLabel.style.margin = '8px 0 0 0';
+receiverNameLabel.style.color = '#6c2eb7';
+receiverNameLabel.style.fontWeight = 'bold';
+transferPhoneInput.parentNode.insertBefore(receiverNameLabel, confirmUserBtn.nextSibling);
+
+let receiverName = '';
+// Xử lý xác nhận người dùng
+confirmUserBtn.addEventListener('click', () => {
+  const receiverPhone = transferPhoneInput.value.trim();
+  receiverNameLabel.textContent = '';
+  if (!receiverPhone) {
+    alert("Vui lòng nhập số điện thoại người nhận!");
+    return;
+  }
+  fetch('/api/confirm-user', {
+    method: 'POST',
+    headers: {'Content-type': 'application/json'},
+    body: JSON.stringify({ phone_number: receiverPhone })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data && data.name) {
+      receiverNameLabel.textContent = `Tên người nhận: ${data.name}`;
+      receiverNameLabel.style.color = '#6c2eb7';
+      receiverName = data.name;
+    } else {
+      receiverNameLabel.textContent = 'Số điện thoại này chưa được đăng ký.';
+      receiverNameLabel.style.color = 'red';
+    }
+  })
+  .catch(() => {
+    receiverNameLabel.textContent = 'Không thể xác thực người nhận.';
+    receiverNameLabel.style.color = 'red';
+  });
+});
+// Xử lý xác nhận chuyển tiền
+confirmTransferBtn.addEventListener('click', () => {
+  const transaction_realtime = getVietnamTimeISO();
+  const receiverPhone = document.getElementById('transferPhone').value;
+  const amount = document.getElementById('transferMoney').value;
+  if (phone_number === receiverPhone) {
+    alert("Số điện thoại người nhận trùng với số điện thoại của bạn !! Vui lòng nhập số điện thoại hợp lệ !!");
+    return;
+  }
+  if (!receiverPhone || amount < 1000) {
+    alert("Vui lòng nhập đầy đủ thông tin và số tiền hợp lệ (tối thiểu 1,000 VNĐ)");
+    return;
+  }
+
+  alert(`Bạn xác nhận chuyển ${amount} VNĐ cho người dùng có số điện thoại ${receiverPhone}`);
+  transferModal.style.display = 'none';
+
+  fetch('/api/transfer', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from_user: username,
+      to_user: receiverName,
+      from_phone_number: phone_number,
+      to_phone_number: receiverPhone,
+      amount,
+      transaction_realtime
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    // Xử lý kết quả trả về nếu cần
+    if (data.success) {
+      alert('Chuyển tiền thành công và đã cập nhật số dư');
+    } else if (data.error) {
+      alert('Lỗi chuyển tiền: ' + data.error);
+    }
+  })
+  .catch(error => {
+    console.error('Lỗi khi chuyển tiền:', error);
+    alert('Có lỗi xảy ra khi chuyển tiền.');
+  });
+});
+  // Đóng modal Chuyển tiền khi click nút đóng hoặc click ra ngoài
+  closeTransferModal.addEventListener('click', () => {
+    transferModal.style.display = 'none';
+  });
+  transferModal.addEventListener('click', (e) => {
+    if (e.target === transferModal) {
+      transferModal.style.display = 'none';
+    }
+  });
+
+
+
+  // Nút và Modal Mua sắm
+const openShopBtn = document.getElementById('shopBtn');
+const shopModal = document.getElementById('shopModal');
+const closeShopModal = document.getElementById('closeShopModal');
+
+// Mở modal mua sắm
+openShopBtn.addEventListener('click', () => {
+  shopModal.style.display = 'flex';
+});
+
+// Đóng modal mua sắm khi click nút đóng hoặc click ra ngoài
+closeShopModal.addEventListener('click', () => {
+  shopModal.style.display = 'none';
+});
+shopModal.addEventListener('click', (e) => {
+  if (e.target === shopModal) {
+    shopModal.style.display = 'none';
+  }
+});
+
+// Xử lý click từng mục mua sắm
+document.getElementById('buyMovieTicket').addEventListener('click', () => {
+  alert('Chức năng mua vé xem phim sẽ sớm ra mắt!');
+});
+document.getElementById('buyGoods').addEventListener('click', () => {
+  alert('Chức năng mua sắm đồ dùng sẽ sớm ra mắt!');
+});
+document.getElementById('buyTravelTicket').addEventListener('click', () => {
+  alert('Chức năng đặt vé du lịch sẽ sớm ra mắt!');
+});
+
+
+
+ 
+
+</script>
+</body>
+<!-- ...existing code... -->
+
+<!-- Chatbot Icon -->
+<!-- ...existing code... -->
+
+<div id="chatbotIcon">
+  <img src="https://img.freepik.com/premium-vector/chat-bot-logo-design-concept-virtual-assistant-bot-icon-logo-robot-head-with-headphones_843540-96.jpg?w=360" alt="Chatbot" style="width:40px;height:40px;" />
+</div>
+
+
+<!-- ...existing code... -->
+</body>
+</html>
+</html>
